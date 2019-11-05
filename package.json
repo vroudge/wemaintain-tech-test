@@ -1,0 +1,38 @@
+{
+  "name": "wemaintain-tech-test",
+  "version": "1.0.0",
+  "main": "index.js",
+  "engines": {
+    "node": ">=12.13.0"
+  },
+  "license": "MIT",
+  "scripts": {
+    "dev": "./node_modules/.bin/nodemon",
+    "start": "./node_modules/.bin/ts-node ./src/server.ts",
+    "debug": "node --inspect -r ts-node/register ./node_modules/.bin/tsc src/server.ts",
+    "setup": "./util/db-setup.sh && CLI=true ./node_modules/.bin/ts-node util/fixtures/insert-fixtures.ts",
+    "lint": "./node_modules/.bin/tslint -p . -c tslint.json",
+    "build": "tsc -p tsconfig.json --outDir ./dist",
+    "test": "jest"
+  },
+  "dependencies": {
+    "couchbase": "^2.6.8",
+    "fastify": "^2.10.0",
+    "fastify-plugin": "^1.6.0",
+    "geolocation-utils": "^1.2.2",
+    "rob-config": "^4.2.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^24.0.20",
+    "@types/node": "^12.11.7",
+    "jest": "^24.9.0",
+    "nodemon": "^1.19.4",
+    "prettier": "^1.18.2",
+    "ts-jest": "^24.1.0",
+    "ts-node": "^8.4.1",
+    "tsc": "^1.20150623.0",
+    "tslint": "^5.20.0",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^3.6.4"
+  }
+}
