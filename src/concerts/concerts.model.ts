@@ -9,7 +9,7 @@ import {
   Location,
   normalizeLocation
 } from "geolocation-utils";
-import { Db } from "../db-connector";
+import {Db} from "../db-connector";
 
 export const findAllByLocation = async (
   db: Db,
@@ -90,7 +90,7 @@ export const findAllByLocation = async (
 
   // execute the query with its parameters
   try {
-    const q = await db.query(query, [
+    return db.query(query, [
       minLat,
       maxLat,
       minLon,
@@ -99,10 +99,28 @@ export const findAllByLocation = async (
       normalizedLocationLng,
       radius / EARTH_RADIUS_IN_KM
     ]);
-    return q
   } catch (e) {
     throw new Error("QUERY_FAILED");
   }
 };
 
-export const findAllByBandsId = async (db, { bandIds }) => {};
+export const findAllByBandsId = async (db, { bandIds }) => {
+  const bandIdsArray: string[] = bandIds.map(bandId => `band::${bandId}`);
+  const query: string = `
+    SELECT 
+      band.name as band, 
+      venue.latitude, 
+      venue.longitude, 
+      venue.name as location,
+      concert.date
+    FROM \`default\` as band USE KEYS ${JSON.stringify(bandIdsArray)}
+    JOIN \`default\` concert ON concert.bandId=META(band).id
+    JOIN \`default\` venue ON concert.venueId=META(venue).id
+    ORDER BY concert.date DESC
+  `;
+  try {
+    return await db.query(query)
+  } catch (e) {
+    throw new Error("QUERY_FAILED");
+  }
+};

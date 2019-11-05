@@ -1,6 +1,8 @@
 import * as fastify from "fastify";
 import * as concertsModel from "./concerts.model";
 
+const badRequest = () => ({ statusCode: 400, message: "Bad Request" });
+
 export const getConcertsController = db => async (
   request: fastify.FastifyRequest,
   reply
@@ -11,31 +13,44 @@ export const getConcertsController = db => async (
     radius,
     "bandIds[]": bandIdsRaw = ""
   }: fastify.DefaultQuery = request.query;
-  // format expected is ?bandIds[]=1,bandIds[]=2
-  const bandIds = bandIdsRaw.split(",").filter(str => str.length);
-  // check that these bandids are valid
-  const bandIdsAreValid = bandIds.every(
+
+  // format expected is ?bandIds[]=1,2,3,4,5
+  const bandIdsProvided: string[] = bandIdsRaw
+    .split(",")
+    .filter(str => str.length);
+  // check that these bandids are valid integers
+  const bandIdsAreValid: boolean = bandIdsProvided.every(
     bandId => bandId.length && !isNaN(parseInt(bandId, 10))
   );
 
-  const hasLocationArgs =
-    typeof latitude === "number" &&
-    typeof longitude === "number" &&
-    typeof radius === "number";
-  // if we have location arguments and valid bandids
+  // if a single location argument has been passed, they must all be passed
+  const checkLocationArguments = [latitude, longitude, radius].some(
+    elem => elem !== undefined
+  );
+  // and if they are not valid we should throw immediately
+  const locationArgumentsAreValid: boolean = !isNaN(latitude + longitude + radius);
+
+  if (checkLocationArguments && !locationArgumentsAreValid) {
+    reply.code(400).send(badRequest())
+  }
+
+  // if we have valid location arguments and valid bandids
   // or just location arguments
-  if (hasLocationArgs && bandIdsAreValid) {
-    // find venues using these arguments
+  if (locationArgumentsAreValid) {
+    // find venues using location AND/OR bandIds
     const res = await concertsModel.findAllByLocation(db, {
-      bandIds,
+      bandIds: bandIdsProvided,
       latitude,
       longitude,
       radius
     });
     reply.code(200).send(res);
-  } else if (bandIds.length) {
+  } else if (bandIdsAreValid) {
     // find venues by bandIds
-    const res = await concertsModel.findAllByBandsId(db, { bandIds });
-    reply.send(res);
+    const res = await concertsModel.findAllByBandsId(db, {
+      bandIds: bandIdsProvided
+    });
+    reply.code(200).send(res);
   }
+  reply.code(400).send(badRequest);
 };
