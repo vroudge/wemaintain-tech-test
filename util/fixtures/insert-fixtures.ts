@@ -65,7 +65,6 @@ const insertFile = async (db, { filename, insertFunction }): Promise<void> => {
 
 const insertFixtures = async () => {
   try {
-    console.log("kek");
     const dbInstance = new Db({ ...config });
     await dbInstance.initDbConnection();
     await dbInstance.createPrimaryIndex({

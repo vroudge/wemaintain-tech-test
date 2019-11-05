@@ -15,3 +15,5 @@
 
 - You can use `npm run dev` to run the application in a live-reloading `nodemon` daemon.
 - Or you can use `npm start` to run the application using `ts-node`.
+
+- Try `curl http://localhost:8080/concerts?latitude=52.5183113&longitude=13.4717676&radius=5 | jq` for a quick example ;)
