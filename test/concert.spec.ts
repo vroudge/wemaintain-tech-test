@@ -1,7 +1,8 @@
 import { createLocation, distanceTo } from "geolocation-utils";
+
 import * as server from "../src/server";
 
-const CONCERT_OBJECT_KEYS = [
+const CONCERT_OBJECT_KEYS: string[] = [
   "band",
   "date",
   "latitude",
@@ -11,10 +12,10 @@ const CONCERT_OBJECT_KEYS = [
 describe("Concerts", () => {
   describe("/concerts", () => {
     let fastify;
-    beforeAll(async () => {
+    beforeAll(() => {
       fastify = server.buildFastify();
     });
-    afterAll(async () => {
+    afterAll(() => {
       fastify.couchbase.bucket.disconnect();
       fastify.close();
     });
@@ -83,11 +84,11 @@ describe("Concerts", () => {
         it("returns only one location", () => {
           const locationNames = new Set();
           for (const obj of json) {
-            // add the name of the location to a set to check how many different locations
-            // were returned by the route
+            // Add the name of the location to a set to check how many different locations
+            // Were returned by the route
             locationNames.add(obj.location);
           }
-          // we found a single location
+          // We found a single location
           expect(locationNames.size).toBe(1);
           expect(Array.from(locationNames)).toStrictEqual([
             "K17, Berlin, Germany"
@@ -102,7 +103,7 @@ describe("Concerts", () => {
               obj.longitude,
               "LatLon"
             );
-            // it is an exact location so distance should be 0
+            // It is an exact location so distance should be 0
             expect(distanceTo(location, locationTested)).toBe(0);
           }
         });
@@ -151,11 +152,11 @@ describe("Concerts", () => {
         it("returns multiple locations", () => {
           const locationNames = new Set();
           for (const obj of json) {
-            // add the name of the location to a set to check how many different locations
-            // were returned by the route
+            // Add the name of the location to a set to check how many different locations
+            // Were returned by the route
             locationNames.add(obj.location);
           }
-          // we found a single location
+          // We found a single location
           expect(locationNames.size).toBe(3);
         });
 
@@ -167,7 +168,7 @@ describe("Concerts", () => {
               obj.longitude,
               "LatLon"
             );
-            // it is an exact location so distance should be 0
+            // It is an exact location so distance should be 0
             expect(distanceTo(location, locationTested)).toBeLessThanOrEqual(
               2000
             );
@@ -320,12 +321,12 @@ describe("Concerts", () => {
           const locationNames = new Set();
           const bandNames = new Set();
           for (const obj of json) {
-            // add the name of the location to a set to check how many different locations
-            // were returned by the route
+            // Add the name of the location to a set to check how many different locations
+            // Were returned by the route
             locationNames.add(obj.location);
             bandNames.add(obj.band);
           }
-          // we found a single location
+          // We found a single location
           expect(locationNames.size).toBe(1);
           expect(Array.from(locationNames)).toStrictEqual([
             "K17, Berlin, Germany"
@@ -341,7 +342,7 @@ describe("Concerts", () => {
               obj.longitude,
               "LatLon"
             );
-            // it is an exact location so distance should be 0
+            // It is an exact location so distance should be 0
             expect(distanceTo(location, locationTested)).toBe(0);
           }
         });
@@ -384,12 +385,12 @@ describe("Concerts", () => {
           const locationNames = new Set();
           const bandNames = new Set();
           for (const obj of json) {
-            // add the name of the location to a set to check how many different locations
-            // were returned by the route
+            // Add the name of the location to a set to check how many different locations
+            // Were returned by the route
             locationNames.add(obj.location);
             bandNames.add(obj.band);
           }
-          // we found 2 location with 2 bands
+          // We found 2 location with 2 bands
           expect(locationNames.size).toBe(2);
           expect(bandNames.size).toBe(2);
         });
@@ -402,7 +403,7 @@ describe("Concerts", () => {
               obj.longitude,
               "LatLon"
             );
-            // it is an exact location so distance should be 0
+            // It is an exact location so distance should be 0
             expect(distanceTo(location, locationTested)).toBeLessThanOrEqual(
               2000
             );

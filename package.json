@@ -10,7 +10,6 @@
     "dev": "./node_modules/.bin/nodemon",
     "start": "./node_modules/.bin/ts-node ./src/server.ts",
     "debug": "node --inspect -r ts-node/register ./node_modules/.bin/tsc src/server.ts",
-    "setup": "./util/db-setup.sh && CLI=true ./node_modules/.bin/ts-node util/fixtures/insert-fixtures.ts",
     "lint": "./node_modules/.bin/tslint -p . -c tslint.json",
     "build": "tsc -p tsconfig.json --outDir ./dist",
     "test": "jest"

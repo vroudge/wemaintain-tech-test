@@ -9,7 +9,7 @@ import {
   Location,
   normalizeLocation
 } from "geolocation-utils";
-import {Db} from "../db-connector";
+import {Db} from "../dbConnector";
 
 export const findAllByLocation = async (
   db: Db,

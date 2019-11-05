@@ -1,7 +1,8 @@
+/* tslint:disable */
 import { readFile } from "fs";
 import { promisify } from "util";
-import config from "../../src/config";
-import { Db } from "../../src/db-connector";
+import { config } from "../../src/config";
+import { Db } from "../../src/dbConnector";
 
 const pReadFile = promisify(readFile);
 
@@ -64,6 +65,7 @@ const insertFile = async (db, { filename, insertFunction }): Promise<void> => {
 
 const insertFixtures = async () => {
   try {
+    console.log("kek");
     const dbInstance = new Db({ ...config });
     await dbInstance.initDbConnection();
     await dbInstance.createPrimaryIndex({
@@ -71,13 +73,9 @@ const insertFixtures = async () => {
       name: "default_primary_idx"
     });
     await dbInstance.createAllIndexes();
-    // tslint:disable-next-line:no-console
-    console.info("Please wait...");
     await Promise.all(
       insertParams.map(async elem => insertFile(dbInstance, elem))
     );
-    // tslint:disable-next-line:no-console
-    console.info("Fixtures successfully inserted.");
     process.exit(0);
   } catch (e) {
     // tslint:disable-next-line:no-console
