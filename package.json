@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "couchbase": "^2.6.8",
-    "fastify": "^2.10.0",
+    "fastify": "^2.15.1",
     "fastify-plugin": "^1.6.0",
     "geolocation-utils": "^1.2.2",
     "rob-config": "^4.2.0"
